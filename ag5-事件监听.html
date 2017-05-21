@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="angular/angular.js"></script>
+	</head>
+	<body>
+		
+		<div ng-app="myApp">
+			
+			<div ng-controller="oneCtrl">
+				one
+				{{twoVal}}
+				
+				<hr/>
+				<div ng-controller="twoCtrl">
+					two<br />
+					<input type="text" ng-model="val" />
+					<button ng-click="sendAction1()">发送给three</button>
+					<button ng-click="sendAction2()">发送给one</button>
+					
+					<hr/>
+					<div ng-controller="threeCtrl">
+						three
+						{{twoVal}}
+						
+					</div>
+					
+				</div>
+				
+			</div>
+			
+			
+			
+		</div>
+		
+		
+		<script>
+			var app = angular.module('myApp', []);
+			app.controller('oneCtrl', ['$scope', function($scope){
+				//监听消息
+				//参数1：监听消息的名字
+				//参数2：监听到消息触发事件
+				$scope.$on('one-mes', function(mesObj, val1, val2){
+					$scope.twoVal = val1;
+				})
+			}])
+			
+			app.controller('twoCtrl', ['$scope', function($scope){
+				$scope.val = '';
+				$scope.sendAction1 = function(){
+					//需要将数据发送给three
+					//向下发送数据
+					//参数1：发送消息的名字
+					//参数2:需要发送的数据
+					$scope.$broadcast('three-mes', $scope.val, 123);
+				}
+				
+				$scope.sendAction2 = function(){
+					//需要将数据发送给one
+					
+					$scope.$emit('one-mes', $scope.val, 123);
+					
+				}
+			}])
+			
+			app.controller('threeCtrl', ['$scope', function($scope){
+				$scope.twoVal = '';
+				
+				//监听消息
+				//参数1：监听消息的名字
+				//参数2：监听到消息触发事件
+				$scope.$on('three-mes', function(mesObj, val1, val2){
+					$scope.twoVal = val1;
+				})
+				
+				
+			}])
+		</script>
+		
+		
+	</body>
+</html>

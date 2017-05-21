@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="angular/angular.js"></script>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	html,
+	body,
+	#app {
+		width: 100%;
+		height: 100%;
+	}
+	.tabs {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 49px;
+		display: flex;
+		background: darkkhaki;
+		border-top: 1px solid #ddd;
+	}
+	
+	.tabs li{
+		text-decoration: none;
+		flex: 1;
+		text-align: center;
+		display: block;
+		line-height: 49px;
+		color: #fff;
+	}
+	
+	.content{
+		width: 100%;
+		position: absolute;
+		top: 0;
+		bottom: 49px;
+		left: 0;
+	}
+	
+	.one{
+		background: red;
+	}
+	.two{
+		background: green;
+	}
+	.three{
+		background: darkcyan;
+	}
+			
+</style>
+	</head>
+	<body>
+		
+		<div ng-app="myApp" id="app">
+			
+			<div class="content one" ng-if="activeIndex==0" ng-controller="oneCtrl">
+				
+			</div>
+			
+			<div class="content two" ng-if="activeIndex==1" ng-controller="twoCtrl">
+			
+			</div>
+			
+			<nav class="tabs">
+				<li ng-repeat="item in tabsTitle" ng-click="navAction($index)">{{item}}</li>
+			</nav>
+			
+		</div>
+			
+			<script>
+				var app = angular.module('myApp', ['myModule']);
+				
+				app.run(['$rootScope', function($rootScope){
+					$rootScope.tabsTitle = ['首页', '热门'];
+					$rootScope.activeIndex = 0;
+					
+					$rootScope.navAction = function(index){
+						console.log(index)
+						$rootScope.activeIndex = index;
+					}
+					
+				}])
+				
+				app.config(['myProviderProvider', function(myProviderProvider){
+					
+					myProviderProvider.path = 'http://afsd/asdfa';
+					
+				}])
+				
+				app.run(function(){
+					console.log('app run');
+				})
+				
+				app.
+				
+				
+				
+				
+				app.controller('oneCtrl', ['$scope', 'myProvider', function($scope, myProvider){
+					
+					console.log(myProvider.getPath());
+					
+				}])
+				
+				
+				app.controller('twoCtrl', ['$scope', function($scope){
+					
+					
+					
+				}])
+				
+			</script>
+			
+		
+		
+		
+	</body>
+</html>

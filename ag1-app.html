@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="angular/angular.js"></script>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	html,
+	body,
+	#app {
+		width: 100%;
+		height: 100%;
+	}
+	.tabs {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 49px;
+		display: flex;
+		background: darkkhaki;
+		border-top: 1px solid #ddd;
+	}
+	
+	.tabs li{
+		text-decoration: none;
+		flex: 1;
+		text-align: center;
+		display: block;
+		line-height: 49px;
+		color: #fff;
+	}
+	.content{
+		width: 100%;
+		position: absolute;
+		top: 0;
+		bottom: 49px;
+		left: 0;
+	}
+	.one{
+		background: red;
+	}
+	.two{
+		background: green;
+	}
+	.three{
+		background: darkcyan;
+	}
+			
+</style>
+	</head>
+	<body>
+		
+		<div ng-app="myApp" id="app">
+			
+			<div class="content one" ng-if="activeIndex==0" ng-controller="oneCtrl">
+				<p>{{title}}</p>
+				<input type="text" ng-model="title" />
+				
+				<hr />
+				<button ng-click="btnAction(true)">消息</button>
+				<button ng-click="btnAction(false)">电话</button>
+				<div ng-if="isShow" ng-controller="messageCtrl">
+					消息
+					{{title}}
+					
+				</div>
+				<div ng-if="!isShow" ng-controller="phoneCtrl">
+					电话
+					{{title}}
+					<input type="text" ng-model="title" />
+				</div>
+				
+			</div>
+			
+			<div class="content two" ng-if="activeIndex==1" ng-controller="twoCtrl">2</div>
+			
+			<div class="content three" ng-if="activeIndex==2" ng-controller="threeCtrl">3</div>
+			
+			<nav class="tabs">
+				<li ng-repeat="item in tabsTitle" ng-click="navAction($index)">{{item}}</li>
+			</nav>
+			
+			<script>
+				var app = angular.module('myApp', []);
+				
+				app.run(['$rootScope', function($rootScope){
+					$rootScope.tabsTitle = ['首页', '热门', '设置'];
+					
+					$rootScope.activeIndex = 0;
+					
+//					$rootScope.title = "hello world";
+					
+					$rootScope.navAction = function(index){
+						console.log(index)
+						$rootScope.activeIndex = index;
+					}
+					
+				}])
+				
+				app.controller('oneCtrl', ['$scope', function($scope){
+					$scope.isShow = true;
+					$scope.title = '千锋教育';
+					$scope.btnAction = function(boolVal){
+						$scope.isShow = boolVal;
+					}
+					
+					
+					
+				}])
+				
+				app.controller('messageCtrl', ['$scope', function($scope){
+					console.log('messageCtrl init');
+				}])
+				app.controller('phoneCtrl', ['$scope', function($scope){
+					console.log('phoneCtrl init');
+				}])
+				
+				app.controller('twoCtrl', ['$scope', function($scope){
+					
+				}])
+				app.controller('threeCtrl', ['$scope', function($scope){
+					
+				}])
+			</script>
+			
+		</div>
+		
+		
+	</body>
+</html>

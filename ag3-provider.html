@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="angular/angular.js"></script>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	html,
+	body,
+	#app {
+		width: 100%;
+		height: 100%;
+	}
+	.tabs {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 49px;
+		display: flex;
+		background: darkkhaki;
+		border-top: 1px solid #ddd;
+	}
+	
+	.tabs li{
+		text-decoration: none;
+		flex: 1;
+		text-align: center;
+		display: block;
+		line-height: 49px;
+		color: #fff;
+	}
+	
+	.content{
+		width: 100%;
+		position: absolute;
+		top: 0;
+		bottom: 49px;
+		left: 0;
+	}
+	
+	.one{
+		background: red;
+	}
+	.two{
+		background: green;
+	}
+	.three{
+		background: darkcyan;
+	}
+			
+</style>
+	</head>
+	<body>
+		
+		<div ng-app="myApp" id="app">
+			
+			<div class="content one" ng-if="activeIndex==0" ng-controller="oneCtrl">
+				
+			</div>
+			
+			<div class="content two" ng-if="activeIndex==1" ng-controller="twoCtrl">
+			
+			</div>
+			
+			<nav class="tabs">
+				<li ng-repeat="item in tabsTitle" ng-click="navAction($index)">{{item}}</li>
+			</nav>
+			
+		</div>
+			
+			<script>
+				var app = angular.module('myApp', []);
+				
+				app.run(['$rootScope', function($rootScope){
+					$rootScope.tabsTitle = ['首页', '热门'];
+					$rootScope.activeIndex = 0;
+					
+					$rootScope.navAction = function(index){
+						console.log(index)
+						$rootScope.activeIndex = index;
+					}
+					
+				}])
+				
+				//配置app的方法
+				//在这个方法中，只有供应商可以注入，供应商也只能注入到这个方法中
+				//在config方法中，可以注入的是provider的供应商，名字是{provider的名字}+Provider
+				app.config(['myProviderProvider', function(myProviderProvider){
+					console.log('app config');
+					//获取得到了供应商之后，可以通过供应商配置服务的内容
+					//并且需要达到只能在config中配置的目的，其他任何地方都不能修改
+					
+					console.log(myProviderProvider)
+					myProviderProvider.path = 'http://afsd/asdfa';
+				}])
+				
+				app.run(function(){
+					console.log('app run');
+				})
+				
+				app.provider('myProvider', function(){
+					
+					console.log('myProvider init');
+					//这也是一个构造函数
+					//但是不是myProvider服务的构造函数,而是该服务供应商的构造函数
+					this.path = '';
+					
+					//服务是通过this.$get函数获得的,可以是字符串，也可以是对象
+					this.$get = function(){
+						console.log('myProvider $get run....');
+						var that = this;
+						var obj = {
+							getPath: function(){
+								return that.path;
+							}
+						}
+						
+						return obj;
+					}
+					
+					
+					
+				})
+				
+				
+				
+				
+				app.controller('oneCtrl', ['$scope', 'myProvider', function($scope, myProvider){
+					
+					console.log(myProvider.getPath());
+					
+				}])
+				
+				
+				app.controller('twoCtrl', ['$scope', function($scope){
+					
+					
+					
+				}])
+				
+			</script>
+			
+		
+		
+		
+	</body>
+</html>
